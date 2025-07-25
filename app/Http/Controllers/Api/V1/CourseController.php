@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLessonRequest;
 use App\Models\Course;
-
+use App\Http\Requests\UpdateCoursePriceRequest;
 
 class CourseController extends Controller
 {
@@ -24,12 +24,16 @@ class CourseController extends Controller
         ], 201);
     }
 
-    public function updateCoursePrice(Request $request, $courseId){
-        // Later: Validate, find course, update price
+    public function updateCoursePrice(UpdateCoursePriceRequest $request, $courseId){
+        $course = Course::findOrFail($courseId);
+
+        $course->update([
+            'price' => $request->price,
+        ]);
+
         return response()->json([
-            'message' => 'updateCoursePrice reached!',
-            'courseId' => $courseId,
-            'data' => $request->all()
+            'message' => 'Course price updated successfully',
+            'data' => $course,
         ]);
     }
 }
